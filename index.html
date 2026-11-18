@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store 〣 Florida State Roleplay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #030611;
+      color: #f2f3f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Blue Background Glows */
+    .bg-glow {
+      position: fixed;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 130, 255, 0.18) 0%, rgba(0,0,0,0) 70%);
+      top: -120px;
+      left: -120px;
+      z-index: 0;
+      pointer-events: none;
+      animation: float 12s ease-in-out infinite alternate;
+    }
+
+    .bg-glow-2 {
+      position: fixed;
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 130, 255, 0.14) 0%, rgba(0,0,0,0) 70%);
+      bottom: -120px;
+      right: -120px;
+      z-index: 0;
+      pointer-events: none;
+      animation: float 10s ease-in-out infinite alternate-reverse;
+    }
+
+    /* Main Glass Container */
+    .store-container {
+      position: relative;
+      z-index: 1;
+      background: rgba(10, 15, 30, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 130, 255, 0.25);
+      padding: 44px 36px;
+      border-radius: 22px;
+      width: 100%;
+      max-width: 920px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(0, 130, 255, 0.2);
+      text-align: center;
+      animation: scaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Server Logo Badge */
+    .icon-badge {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 18px auto;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 130, 255, 0.5);
+      box-shadow: 0 0 25px rgba(0, 130, 255, 0.4);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    .icon-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #0082ff;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 0.94rem;
+      line-height: 1.5;
+      max-width: 540px;
+      margin: 0 auto 32px auto;
+    }
+
+    /* Store Grid */
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      text-align: left;
+    }
+
+    @media (max-width: 680px) {
+      .store-grid {
+        grid-template-columns: 1fr;
+      }
+      .store-container {
+        padding: 32px 20px;
+      }
+    }
+
+    /* Individual Product Card */
+    .product-card {
+      position: relative;
+      background: rgba(3, 7, 18, 0.85);
+      border: 1px solid rgba(0, 130, 255, 0.22);
+      border-radius: 16px;
+      padding: 26px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.45);
+    }
+
+    .product-card:hover {
+      border-color: #0082ff;
+      background: rgba(0, 130, 255, 0.07);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0, 130, 255, 0.22), inset 0 2px 4px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Featured Best Value Card */
+    .product-card.featured {
+      border: 1.5px solid #0082ff;
+      background: linear-gradient(180deg, rgba(0, 130, 255, 0.14) 0%, rgba(3, 7, 18, 0.92) 100%);
+      box-shadow: 0 0 30px rgba(0, 130, 255, 0.2);
+    }
+
+    .product-card.featured:hover {
+      box-shadow: 0 12px 35px rgba(0, 130, 255, 0.35);
+    }
+
+    .best-value-badge {
+      position: absolute;
+      top: -12px;
+      right: 18px;
+      background: linear-gradient(90deg, #0082ff, #3b82f6);
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(0, 130, 255, 0.5);
+    }
+
+    .product-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #60a5fa;
+      margin-bottom: 8px;
+    }
+
+    .product-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .product-desc {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+
+    .perks-list {
+      list-style: none;
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .perks-list li {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .perks-list li::before {
+      content: "✓";
+      color: #0082ff;
+      font-weight: 800;
+    }
+
+    /* Purchase Button */
+    .buy-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 10px;
+      background: rgba(0, 130, 255, 0.16);
+      border: 1px solid rgba(0, 130, 255, 0.45);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+      transition: all 0.25s ease;
+    }
+
+    .buy-btn:hover {
+      background: #0082ff;
+      border-color: #0082ff;
+      box-shadow: 0 4px 18px rgba(0, 130, 255, 0.45);
+    }
+
+    .product-card.featured .buy-btn {
+      background: #0082ff;
+      border-color: #0082ff;
+    }
+
+    .product-card.featured .buy-btn:hover {
+      background: #006fd6;
+      box-shadow: 0 6px 22px rgba(0, 130, 255, 0.55);
+    }
+
+    .buy-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    /* Claim Pop-Up Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 4, 12, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+
+    .modal-box {
+      position: relative;
+      background: rgba(10, 15, 30, 0.95);
+      border: 1px solid rgba(0, 130, 255, 0.45);
+      border-radius: 20px;
+      padding: 34px 28px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(0, 130, 255, 0.25);
+      animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+
+    .modal-close:hover {
+      color: #ffffff;
+    }
+
+    .modal-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .modal-text {
+      font-size: 0.98rem;
+      color: #cbd5e1;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    .discord-inline-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #5865F2;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 5px 13px;
+      border-radius: 8px;
+      margin: 0 2px;
+      vertical-align: baseline;
+      box-shadow: 0 4px 14px rgba(88, 101, 242, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .discord-inline-btn:hover {
+      background: #4752C4;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.55);
+    }
+
+    .modal-dismiss-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(0, 130, 255, 0.14);
+      border: 1px solid rgba(0, 130, 255, 0.35);
+      color: #93c5fd;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-dismiss-btn:hover {
+      background: rgba(0, 130, 255, 0.25);
+      color: #ffffff;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleUp {
+      from { opacity: 0; transform: scale(0.94); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(30px, 30px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="bg-glow-2"></div>
+
+  <div class="store-container">
+    <div class="icon-badge">
+      <img src="https://i.postimg.cc/fLDqFCgj/933343108c74cc3d661798cd4ebca0d9.png" alt="Florida State Roleplay Logo">
+    </div>
+
+    <div class="brand-sub">Florida State Roleplay</div>
+    <h1>Official Server Store</h1>
+    <p class="subtitle">Support Florida State Roleplay and unlock exclusive perks, priority features, and announcement pings via Roblox Game Passes.</p>
+
+    <div class="store-grid">
+      <!-- FL Premium -->
+      <div class="product-card">
+        <div>
+          <span class="product-tag">Membership Perk</span>
+          <h2 class="product-title">FL Premium</h2>
+          <p class="product-desc">Stand out in the community and unlock exclusive FL Premium member benefits across Florida State Roleplay.</p>
+          <ul class="perks-list">
+            <li>Exclusive FL Premium Discord Role</li>
+            <li>Priority access & supporter recognition</li>
+            <li>Special member perks & giveaways</li>
+          </ul>
+        </div>
+        <a href="https://www.roblox.com/game-pass/2093193024/FL-Premium" target="_blank" rel="noopener noreferrer" class="buy-btn">
+          <span>Purchase on Roblox</span>
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      </div>
+
+      <!-- Ping Bundle (BEST VALUE) -->
+      <div class="product-card featured">
+        <span class="best-value-badge">Best Value</span>
+        <div>
+          <span class="product-tag">All-In-One Pack</span>
+          <h2 class="product-title">Ping Bundle</h2>
+          <p class="product-desc">Get maximum reach for your advertisements and events by combining both ping passes at a discounted bundle rate.</p>
+          <ul class="perks-list">
+            <li>Includes <strong>Here Ping</strong> permissions</li>
+            <li>Includes <strong>Everyone Ping</strong> permissions</li>
+            <li>Best overall value compared to buying separately</li>
+          </ul>
+        </div>
+        <a href="https://www.roblox.com/game-pass/2092370979/Ping-Bundle" target="_blank" rel="noopener noreferrer" class="buy-btn">
+          <span>Get Best Value on Roblox</span>
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      </div>
+
+      <!-- Everyone Ping -->
+      <div class="product-card">
+        <div>
+          <span class="product-tag">Maximum Reach</span>
+          <h2 class="product-title">Everyone Ping</h2>
+          <p class="product-desc">Notify the entire server for major announcements, server startups, or high-priority community events.</p>
+          <ul class="perks-list">
+            <li>Ability to use @everyone pings</li>
+            <li>Full server-wide notification reach</li>
+            <li>Subject to server ping rules & cooldowns</li>
+          </ul>
+        </div>
+        <a href="https://www.roblox.com/game-pass/2094014974/Everyone-Ping" target="_blank" rel="noopener noreferrer" class="buy-btn">
+          <span>Purchase on Roblox</span>
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      </div>
+
+      <!-- Here Ping -->
+      <div class="product-card">
+        <div>
+          <span class="product-tag">Active Reach</span>
+          <h2 class="product-title">Here Ping</h2>
+          <p class="product-desc">Alert all currently online members in the Discord for quick sessions, patrols, and active events.</p>
+          <ul class="perks-list">
+            <li>Ability to use @here pings</li>
+            <li>Targets active online members</li>
+            <li>Subject to server ping rules & cooldowns</li>
+          </ul>
+        </div>
+        <a href="https://www.roblox.com/game-pass/2092299019/Here-Ping" target="_blank" rel="noopener noreferrer" class="buy-btn">
+          <span>Purchase on Roblox</span>
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      </div>
+    </div>
+
+    <p class="footer-note">All purchases are processed securely through Roblox. Open a management ticket in Discord after purchasing to claim your perks.</p>
+  </div>
+
+  <!-- Return Pop-Up Modal -->
+  <div class="modal-overlay" id="claim-modal">
+    <div class="modal-box">
+      <button class="modal-close" id="close-modal-x" aria-label="Close">&times;</button>
+      <div class="icon-badge" style="width: 56px; height: 56px; margin-bottom: 14px;">
+        <img src="https://i.postimg.cc/fLDqFCgj/933343108c74cc3d661798cd4ebca0d9.png" alt="Florida State Roleplay Logo">
+      </div>
+      <h2 class="modal-title">Buy a product?</h2>
+      <p class="modal-text">
+        Go to <a href="https://discord.gg/flstate" target="_blank" rel="noopener noreferrer" class="discord-inline-btn">our discord</a> and open a management ticket!
+      </p>
+      <button type="button" class="modal-dismiss-btn" id="close-modal-btn">Got it</button>
+    </div>
+  </div>
+
+  <script>
+    const buyButtons = document.querySelectorAll('.buy-btn');
+    const claimModal = document.getElementById('claim-modal');
+    const closeModalX = document.getElementById('close-modal-x');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    let clickedRobloxLink = false;
+
+    // Mark that the user clicked a Roblox game pass button
+    buyButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        clickedRobloxLink = true;
+      });
+    });
+
+    // Show the pop-up when they switch back to this tab/window
+    function checkReturnFromRoblox() {
+      if (clickedRobloxLink && !document.hidden) {
+        clickedRobloxLink = false;
+        claimModal.classList.add('active');
+      }
+    }
+
+    document.addEventListener('visibilitychange', checkReturnFromRoblox);
+    window.addEventListener('focus', checkReturnFromRoblox);
+
+    // Close modal handlers
+    function closeModal() {
+      claimModal.classList.remove('active');
+    }
+
+    closeModalX.addEventListener('click', closeModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    claimModal.addEventListener('click', (e) => {
+      if (e.target === claimModal) closeModal();
+    });
+  </script>
+</body>
+</html>
